@@ -157,11 +157,15 @@ app.post('/api/create-bundle', async (req, res) => {
     const components = products.map((product, index) => {
     const productData = data[`product${index}`];
 
-    const optionSelections = productData.options.map(opt => ({
-      componentOptionId: opt.id,
-      name: opt.name,
-      values: [opt.values[0]] // pick the first available value
-    }));
+    const optionSelections = productData.options.map(opt => {
+      const clientOption = product.options?.find(o => o.name.toLowerCase() === opt.name.toLowerCase());
+
+      return {
+        componentOptionId: opt.id,
+        name: opt.name,
+        values: clientOption ? [clientOption.value] : [opt.values[0]]
+      };
+    });
 
     return {
       productId: productData.id,
@@ -169,6 +173,7 @@ app.post('/api/create-bundle', async (req, res) => {
       optionSelections
     };
   });
+
 
     // Build the bundle mutation
     const mutation = `
