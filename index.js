@@ -117,7 +117,7 @@ app.post('/api/create-bundle', async (req, res) => {
 
   try {
     const products = req.body.products; // [{ productId, quantity }]
-    
+    console.log(products, 'Products received from client');
     // Convert product IDs to global Shopify IDs
     const globalIds = products.map(p => `gid://shopify/Product/${p.productId}`);
 
@@ -151,6 +151,8 @@ app.post('/api/create-bundle', async (req, res) => {
 
     const productResult = await productResponse.json();
     const data = productResult.data;
+
+    console.log(data, 'Product data fetched from Shopify');
 
     const components = products.map((product, index) => {
     const productData = data[`product${index}`];
