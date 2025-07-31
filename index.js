@@ -106,6 +106,17 @@ app.post('/api/create-bundle', async (req, res) => {
             field
             message
           }
+            productBundleOperation {
+              product {
+                variants(first: 1) {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+              }
+            }
         }
       }
     `;
