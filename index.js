@@ -11,106 +11,6 @@ app.use(express.json());
 const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_STORE}/admin/api/2024-07/graphql.json`;
 const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
 
-// app.post('/api/create-bundle', async (req, res) => {
-//   console.log(req.body, 'Request body received');
-//   // try {
-//   //   const mutation = `
-//   //     mutation {
-//   //       productBundleCreate(
-//   //         input: {
-//   //           title: "Summer Pack",
-//   //           components: [
-//   //             {
-//   //               productId: "gid://shopify/Product/10648364974347",
-//   //               quantity: 1,
-//   //               optionSelections: [
-//   //                 {
-//   //                   componentOptionId: "gid://shopify/ProductOption/12835215802635",
-//   //                   name: "Silver",
-//   //                   values: "Silver
-//   //                 }
-//   //               ]
-//   //             }
-//   //           ]
-//   //         }
-//   //       ) {
-//   //         userErrors {
-//   //           field
-//   //           message
-//   //         }
-//   //       }
-//   //     }
-//   //   `;
-
-//   //   const response = await fetch(SHOPIFY_API_URL, {
-//   //     method: 'POST',
-//   //     headers: {
-//   //       'Content-Type': 'application/json',
-//   //       'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN,
-//   //     },
-//   //     body: JSON.stringify({ query: mutation }),
-//   //   });
-
-//   //   const result = await response.json();
-//   //   console.log('Shopify response:', result);
-//   //   res.json(result);
-//   // } catch (error) {
-//   //   console.error('Unexpected server error:', error);
-//   //   res.status(500).json({ error: 'Internal Server Error' });
-//   // }
-
-// try {
-//   const products = req.body.products; // received from client
-
-//   // Convert each numeric productId to Shopify global ID
-//   const globalIds = products.map(p => `gid://shopify/Product/${p.productId}`);
-
-//   // Build a dynamic GraphQL query using Shopify's `node` for each product
-//   const query = `
-//     {
-//       ${globalIds.map((id, index) => `
-//         product${index}: node(id: "${id}") {
-//           ... on Product {
-//             id
-//             title
-//             options {
-//               id
-//               name
-//               values
-//             }
-//             variants(first: 10) {
-//               edges {
-//                 node {
-//                   id
-//                   title
-//                 }
-//               }
-//             }
-//           }
-//         }
-//       `).join('\n')}
-//     }
-//   `;
-
-//   const response = await fetch(SHOPIFY_API_URL, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN,
-//     },
-//     body: JSON.stringify({ query }),
-//   });
-
-//   const result = await response.json();
-//   res.json(result);
-// } catch (error) {
-//   console.error('Unexpected server error:', error);
-//   res.status(500).json({ error: 'Internal Server Error' });
-// }
-
-// });
-
-
 
 app.post('/api/create-bundle', async (req, res) => {
   //console.log(req.body, 'Request body received');
@@ -178,7 +78,8 @@ app.post('/api/create-bundle', async (req, res) => {
     // Build the bundle mutation
     const mutation = `
       mutation {
-        productBundleCreate(
+        productBundleUpdate(
+        id: "10656455196939",
           input: {
             title: "Custom Bundle",
             components: [
