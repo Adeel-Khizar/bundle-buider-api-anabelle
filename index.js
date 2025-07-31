@@ -79,8 +79,8 @@ app.post('/api/create-bundle', async (req, res) => {
     const mutation = `
       mutation {
         productBundleUpdate(
-        id: "10656455196939",
           input: {
+            productId: "gid://shopify/Product/10656455196939",
             title: "Custom Bundle",
             components: [
               ${components.map(component => `
