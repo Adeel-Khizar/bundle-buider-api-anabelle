@@ -84,7 +84,7 @@ app.post('/api/create-bundle', async (req, res) => {
         productBundleUpdate(
           input: {
             productId: "gid://shopify/Product/10656455196939",
-            title: "Bundle",
+            title: "Bundle - Any 5 Pieces - 70% OFF",
             components: [
               ${components.map(component => `
                 {
