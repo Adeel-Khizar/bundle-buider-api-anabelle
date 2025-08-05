@@ -18,6 +18,12 @@ app.post('/api/create-bundle', async (req, res) => {
     // Convert product IDs to global Shopify IDs
     const globalIds = products.map(p => `gid://shopify/Product/${p.productId}`);
 
+    // main product ID
+    const mainProductId = `gid://shopify/Product/${req.body.mainProductId}`;
+
+    // main product Title
+    const mainProductTitle = req.body.mainProductTitle || 'Bundle - Any 5 Pieces - 70% OFF';
+
     // Build GraphQL query to fetch product options
     const query = `
       {
@@ -83,8 +89,8 @@ app.post('/api/create-bundle', async (req, res) => {
       mutation {
         productBundleUpdate(
           input: {
-            productId: "gid://shopify/Product/10656455196939",
-            title: "Bundle - Any 5 Pieces - 70% OFF",
+            productId: "${mainProductId}",
+            title: "${mainProductTitle}",
             components: [
               ${components.map(component => `
                 {
