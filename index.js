@@ -85,86 +85,119 @@ app.post('/api/create-bundle', async (req, res) => {
     const totalPrice = components.reduce((sum, c) => sum + (c.price * c.quantity), 0).toFixed(2);
 
     // === UPDATE BUNDLE PRODUCT ===
+    // const bundleMutation = `
+    //   mutation {
+    //     productBundleUpdate(
+    //       input: {
+    //         productId: "${mainProductId}",
+    //         title: "${mainProductTitle}",
+    //         components: [
+    //           ${components.map(component => `
+    //             {
+    //               productId: "${component.productId}",
+    //               quantity: ${component.quantity},
+    //               optionSelections: [
+    //                 ${component.optionSelections.map(selection => `
+    //                   {
+    //                     componentOptionId: "${selection.componentOptionId}",
+    //                     name: "${selection.name}",
+    //                     values: ["${selection.values[0]}"]
+    //                   }
+    //                 `).join(',')}
+    //               ]
+    //             }
+    //           `).join(',')}
+    //         ]
+    //       }
+    //     ) {
+    //       userErrors {
+    //         field
+    //         message
+    //       }
+    //       productBundleOperation {
+    //         product {
+    //           variants(first: 1) {
+    //             edges {
+    //               node {
+    //                 id
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // `;
+
     const bundleMutation = `
-      mutation {
-        productBundleUpdate(
-          input: {
-            productId: "${mainProductId}",
-            title: "${mainProductTitle}",
-            components: [
-              ${components.map(component => `
-                {
-                  productId: "${component.productId}",
-                  quantity: ${component.quantity},
-                  optionSelections: [
-                    ${component.optionSelections.map(selection => `
-                      {
-                        componentOptionId: "${selection.componentOptionId}",
-                        name: "${selection.name}",
-                        values: ["${selection.values[0]}"]
-                      }
-                    `).join(',')}
-                  ]
-                }
-              `).join(',')}
-            ]
-          }
-        ) {
-          userErrors {
-            field
-            message
-          }
-          productBundleOperation {
-            product {
-              variants(first: 1) {
-                edges {
-                  node {
-                    id
-                  }
-                }
-              }
+     mutation {
+  productBundleCreate(
+    input: {
+
+      title: "Bundle Builder"
+      components: [
+        {
+          productId: "gid://shopify/Product/9651150750024"
+          quantity: 1
+          optionSelections: [
+            {
+              componentOptionId: "gid://shopify/ProductOption/12390754058568"
+              name: "Color"
+              values: ["Gold"]
+            }
+          ]
+        }
+        {
+          productId: "gid://shopify/Product/9651151765832"
+          quantity: 2
+          optionSelections: [
+            {
+              componentOptionId: "gid://shopify/ProductOption/12390755107144"
+              name: "Color"
+              values: ["Gold"]
+            }
+            {
+              componentOptionId: "gid://shopify/ProductOption/12390755139912"
+              name: "Ring size"
+              values: ["3"]
+            }
+          ]
+        }
+        {
+          productId: "gid://shopify/Product/9651151503688"
+          quantity: 2
+          optionSelections: [
+            {
+              componentOptionId: "gid://shopify/ProductOption/12390754845000"
+              name: "Color"
+              values: ["Gold"]
+            }
+          ]
+        }
+      ]
+    }
+  ) {
+    userErrors {
+      field
+      message
+    }
+    productBundleOperation {
+      product {
+        id
+        title
+        variants(first: 1) {
+          edges {
+            node {
+              id
             }
           }
         }
       }
-    `;
+    }
+  }
+}
 
-    // const bundleMutation = `mutation {
-    //   productBundleCreate(
-    //     input: {
-    //       title: "Bundle Builder",
-    //       components: [
-    //         {
-    //           productId: "gid://shopify/Product/8393959112971",
-    //           quantity: 1,
-    //           optionSelections: [
-    //             {
-    //               componentOptionId: "gid://shopify/ProductOption/10687583912203",
-    //               name: "Farbe",
-    //               values: "Gold"
-    //             }
-    //           ]
-    //         },
-    //         {
-    //           productId: "gid://shopify/Product/8393959112971",
-    //           quantity: 2,
-    //           optionSelections: [
-    //             {
-    //               componentOptionId: "gid://shopify/ProductOption/10687583912203",
-    //               name: "Farbe",
-    //               values: "Gold"
-    //             }
-    //           ]
-    //         }
-    //       ]
-    //     }
-    //   ) {
-    //     userErrors {
-    //       field
-    //       message
-    //     }
-    //   }
-    // }`;
+    `;
 
     const bundleResponse = await fetch(SHOPIFY_API_URL, {
       method: 'POST',
