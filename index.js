@@ -14,14 +14,8 @@ const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
 app.post('/api/create-bundle', async (req, res) => {
   try {
     const products = req.body.products;
-
-    // Convert product IDs to global Shopify IDs
     const globalIds = products.map(p => `gid://shopify/Product/${p.productId}`);
-
-    // main product ID
     const mainProductId = `gid://shopify/Product/${req.body.mainProductId}`;
-
-    // main product Title
     const mainProductTitle = req.body.mainProductTitle || 'Bundle - Any 5 Pieces - 70% OFF';
 
     // Build GraphQL query to fetch product options
@@ -61,7 +55,7 @@ app.post('/api/create-bundle', async (req, res) => {
     const productResult = await productResponse.json();
     const data = productResult.data;
 
-    // Build components array & calculate total price
+
     const components = products.map((product, index) => {
       const productData = data[`product${index}`];
       const variant = productData.variants.edges[0].node;
@@ -77,14 +71,10 @@ app.post('/api/create-bundle', async (req, res) => {
       return {
         productId: productData.id,
         quantity: product.quantity,
-        optionSelections,
-        price: parseFloat(variant.price)
+        optionSelections
       };
     });
 
-    const totalPrice = components.reduce((sum, c) => sum + (c.price * c.quantity), 0).toFixed(2);
-
-    // === UPDATE BUNDLE PRODUCT ===
     const bundleMutation = `
       mutation {
         productBundleUpdate(
@@ -180,52 +170,6 @@ app.post('/api/create-bundle', async (req, res) => {
     const bundleData = await bundleResponse.json();
     console.log('Bundle Data:', bundleData);
     res.json(bundleData);
-
-
-    // const variantId = bundleData?.data?.productBundleUpdate?.productBundleOperation?.product?.variants?.edges[0]?.node?.id;
-
-    // if (!variantId) {
-    //   return res.status(500).json({ error: 'Failed to get variant ID for bundle' });
-    // }
-
-    // === UPDATE VARIANT PRICE ===
-    // const priceMutation = `
-    //   mutation {
-    //     productVariantUpdate(
-    //       input: {
-    //         id: "${variantId}",
-    //         price: "${totalPrice}"
-    //       }
-    //     ) {
-    //       productVariant {
-    //         id
-    //         price
-    //       }
-    //       userErrors {
-    //         field
-    //         message
-    //       }
-    //     }
-    //   }
-    // `;
-
-    // const priceResponse = await fetch(SHOPIFY_API_URL, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN,
-    //   },
-    //   body: JSON.stringify({ query: priceMutation }),
-    // });
-
-    // const priceData = await priceResponse.json();
-
-    // res.json({
-    //   message: 'Bundle updated and price set successfully.',
-    //   totalPrice,
-    //   bundleResponse: bundleData,
-    //   priceResponse: priceData
-    // });
 
   } catch (error) {
     console.error('Unexpected server error:', error);
