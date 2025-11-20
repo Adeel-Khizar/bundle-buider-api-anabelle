@@ -108,7 +108,7 @@ app.post('/api/create-bundle', async (req, res) => {
             product {
               variants(first: 1) {
                 edges {
-                  node {
+                  node { 
                     id
                   }
                 }
