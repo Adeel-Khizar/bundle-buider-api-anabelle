@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_STORE}/admin/api/2025-10/graphql.json`;
+const SHOPIFY_API_URL = `https://${process.env.SHOPIFY_STORE}/admin/api/2024-07/graphql.json`;
 const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
 
 app.post('/api/create-bundle', async (req, res) => {
@@ -104,29 +104,12 @@ app.post('/api/create-bundle', async (req, res) => {
             field
             message
           }
-        productBundleOperation {
-          product {
+          productBundleOperation {
+            product {
               variants(first: 1) {
                 edges {
                   node {
                     id
-                  }
-                }
-              }
-              productComponentsCount {
-                count
-              }
-              productComponents(first: 10) {
-                nodes {
-                  componentVariants(first: 10) {
-                    nodes {
-                      product {
-                        options(first: 10) {
-                          name
-                          values
-                        }
-                      }
-                    }
                   }
                 }
               }
